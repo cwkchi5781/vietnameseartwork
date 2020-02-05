@@ -1,0 +1,26 @@
+#middle > .container > .row > .col-sm > .card{
+    width: 12rem;
+    height: 17rem;
+    color:black;
+}
+
+.card-body > h7: hover{
+    text-decoration: underline;
+
+}
+
+.container > .row > .col-sm > .card.m-3.p-1 > .card-body > a : hover{
+    font-color:black;
+}
+
+#temp{
+    width: 12rem;
+    height: 17rem;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
