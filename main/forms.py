@@ -53,3 +53,18 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=4)])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+
+class AddSection(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
+    img_file = FileField('Upload image', validators=[FileAllowed(['jpg','png'])])
+    submit = SubmitField('Add Section')
+
+    def validate_name(self, name):
+        section = User.query.filter_by(name=name.data).first()
+        if section:
+            raise ValidationError('Name is already used by another section')
+
+    def validate_img(self, img_file):
+        img = User.query.filter_by(img_file=img_file.data).first()
+        if img:
+            raise ValidationError('The image is already in use.')

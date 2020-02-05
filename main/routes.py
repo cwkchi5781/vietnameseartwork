@@ -4,7 +4,7 @@ from PIL import Image
 from flask import url_for, render_template, flash, redirect, request
 from main import app
 from main import db, bcrypt, admin
-from main.forms import SignUpForm, LoginForm, UpdateAccount
+from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection
 from main.models import User, Section, Purchase, Item
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -169,11 +169,19 @@ def admin():
     admin.add_view(ModelView(User, db.session))
     #return render_template('sectionsDisplay.html')
 
-@app.route('/admin/addSection')
+@app.route('/addSection')
 def addSection():
-    pass
-    #admin.add_view(ModelView(User, db.session))
-    #return render_template('sectionsOutline.html', section=sectionName)
+    form = AddSection()
+    if form.validate_on_submit():
+        if form.img_file.data:
+            imgfile = app.root_path + "/static/images/" + form.img_file
+            sect = Section(name=form.name.data, img_file=imgfile)
+        else:
+            sect = Section(name=form.name.data)
+        db.session.add(sect)
+        db.session.commit()
+        flash(f'Section {form.name.data} created', 'success')
+    return render_template('admin/addSection.html', form=form)
 
 app.route('/purchases/new')
 def checkOut():

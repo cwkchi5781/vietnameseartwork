@@ -1,53 +1,38 @@
 {% extends 'index.html' %}
 {% block content %}
 <div class="container mt-2">
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
             {{form.hidden_tag()}}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">
-                    Log In
+                    Enter Section Information
                 </legend>
                 <div class="form-group">
-                    {{ form.email.label(class="form-control-label") }}
-                    {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    {{ form.name.label(class="form-control-label") }}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.email.errors %}
+                            {% for error in form.name.errors %}
                             <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
+                        {{ form.name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
-                    {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.password.errors %}
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.password(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-check">
-                    {{ form.remember(class="form-check-input") }}
-                    {{ form.remember.label(class="form-check-label") }}
-                </div>
+                 <div class="form-group">
+                {{ form.img_file.label() }}
+                {{ form.img_file(class='form-control-file') }}
+                {% if form.img_file.errors %}
+                    {%  for error in form.img_file.errors %}
+                     <span class="text-danger">{{ error }}</span> <br>
+                    {% endfor %}
+                {% endif %}
+                 </div>
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
-        <div class="border-top pt-3">
-            <small class="muted">
-                Don't have an account? <a class="ml-2" href="{{ url_for('SignUp')}}"> Sign Up </a>
-            </small>
-        </div>
     </div>
-
-
 {% endblock content %}
