@@ -20,6 +20,19 @@
                         {{ form.name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    {{ form.img_alt.label(class="form-control-label") }}
+                    {% if form.img_alt.errors %}
+                        {{ form.img_alt(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.img_alt(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
                  <div class="form-group">
                 {{ form.img_file.label() }}
                 {{ form.img_file(class='form-control-file') }}

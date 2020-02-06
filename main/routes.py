@@ -8,69 +8,10 @@ from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection
 from main.models import User, Section, Purchase, Item
 from flask_login import login_user, current_user, logout_user, login_required
 
-sections = [
-    {
-        'name': 'Lacquer Paintings',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/inlay_art_lacquer5262t.JPG',
-        'id': 'LacquerPaintings',
-        'alt':"Vietnamese Lacquer Paintings Art-Vietnam lacquer-Oriental, Asian Lacquer",
-        'index': 0,
-    },
-    {
-        'name': 'Ao Dai/Children Outfits',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/Red-Aodai-for-boys_4872t.jpg',
-        'id': 'AoDai',
-        'alt':"Ao Dai, Vietnamese Traditional Outfits, Vietnamese Silk Ao Dai Dresses for Children",
-        'index': 1,
-    },
-    {
-        'name': 'Coconut Bowls',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/CBK1_9790t.jpg',
-        'id': 'CoconutBowls',
-        'alt':"Vietnamese coconut bowls",
-        'index': 2,
-    },
-    {
-        'name': 'Vietnamese Origami Cards',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/Bride-and-Groom-Card_9304t.jpg',
-        'id': 'VietnameseOrigamiCards',
-        'alt':"Pop Up Origami Cards for All Occasions",
-        'index': 3,
-    },
-    {
-        'name': 'Silk Table Runners',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/STR6_8860t.jpg',
-        'id': 'SilkTableRunners',
-        'alt':"Vietnamese Silk Table Runners",
-        'index': 4,
-    },
-    {
-        'name': 'Vietnamese Oil Paintings',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/Hanoi-Old-Street_9767t.jpg',
-        'id': 'VietnameseOilPaintings',
-        'alt':"Vietnamese Oil Paintings/Arcrylic Paintings",
-        'index': 5,
-    },
-    {
-        'name': 'Chopsticks Boxes',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/CBI9_9040t.jpg',
-        'id': 'ChopsticksBoxes',
-        'alt':"Hand Carved Wooden Boxes - Vietnamese Chopsticks Boxes",
-        'index': 6,
-    },
-    {
-        'name': 'Lacquerware',
-        'ImageInk': 'http://smoothtrader.com/asia2you/ItemPics/LBC15_6577t.jpg',
-        'id': 'Lacquerware',
-        'alt':"Vietnamese lacquer-Asian Lacquerware-Oriental lacquer-Beautiful lacquer plates-Lacquer boxes",
-        'index': 6,
-    },
-]
-
-
 @app.route('/')
 def home():
-    return render_template('sectionsDisplay.html', sections=sections, sectLen=len(sections))
+    sections = Section.query.all()
+    return render_template('sectionsDisplay.html', sections=sections)
 
 @app.route('/signUp', methods=['GET', 'POST'])
 def SignUp():
@@ -118,14 +59,17 @@ def logOut():
     flash('You have been logged out', 'success')
     return redirect(url_for('home'))
 
-def save_picture(form_picture):
+def save_picture(form_picture, profile):
     random_hex = secrets.token_hex(8)
     f_name, f_ext = os.path.split(form_picture.filename)
     picture_fn = random_hex + f_ext
     while User.query.filter_by(img_file=picture_fn).first():
         random_hex = secrets.token_hex(8)
         picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/images/profile_pics/', picture_fn)
+    if profile:
+        picture_path = os.path.join(app.root_path, 'static/images/profile_pics/', picture_fn)
+    else:
+        picture_path = os.path.join(app.root_path, 'static/images/', picture_fn)
 
     output_size = (140, 140)
     i = Image.open(form_picture)
@@ -150,7 +94,7 @@ def account():
             except OSError as error:
                 print(error)
                 print("File path can not be removed")
-            profile_pic = save_picture(form.profile_img.data)
+            profile_pic = save_picture(form.profile_img.data, True)
             current_user.img_file = profile_pic
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -169,15 +113,15 @@ def admin():
     admin.add_view(ModelView(User, db.session))
     #return render_template('sectionsDisplay.html')
 
-@app.route('/addSection')
+@app.route('/admin/addSection', methods=['GET', 'POST'])
 def addSection():
     form = AddSection()
     if form.validate_on_submit():
         if form.img_file.data:
-            imgfile = app.root_path + "/static/images/" + form.img_file
-            sect = Section(name=form.name.data, img_file=imgfile)
+            imgfile = save_picture(form.img_file.data, False)
+            sect = Section(name=form.name.data, img_alt=form.img_alt.data, img_file=imgfile)
         else:
-            sect = Section(name=form.name.data)
+            sect = Section(name=form.name.data, img_alt=form.img_alt.data)
         db.session.add(sect)
         db.session.commit()
         flash(f'Section {form.name.data} created', 'success')

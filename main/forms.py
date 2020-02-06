@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from main.models import User
+from main.models import User, Section
 from flask_login import current_user
 
 
@@ -27,6 +27,7 @@ class SignUpForm(FlaskForm):
         if email:
             raise ValidationError('This email has already been used.')
 
+
 class UpdateAccount(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -46,7 +47,6 @@ class UpdateAccount(FlaskForm):
                 raise ValidationError('This email has already been used.')
 
 
-
 class LoginForm(FlaskForm):
     #username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -54,17 +54,24 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
 
+
 class AddSection(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
     img_file = FileField('Upload image', validators=[FileAllowed(['jpg','png'])])
+    img_alt = StringField('Image Description', validators=[DataRequired(), Length(min=5, max=200)])
     submit = SubmitField('Add Section')
 
     def validate_name(self, name):
-        section = User.query.filter_by(name=name.data).first()
+        section = Section.query.filter_by(name=name.data).first()
         if section:
             raise ValidationError('Name is already used by another section')
 
     def validate_img(self, img_file):
-        img = User.query.filter_by(img_file=img_file.data).first()
+        img = Section.query.filter_by(img_file=img_file.data).first()
         if img:
             raise ValidationError('The image is already in use.')
+
+    #def validate_img_alt(self, img_alt):
+    #    img_alt = Section.query.filter_by(img_alt=img_alt.data).first()
+    #    if img_alt:
+    #        raise ValidationError('Same description as of another image.')

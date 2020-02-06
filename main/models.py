@@ -34,10 +34,11 @@ class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     img_file = db.Column(db.String(20), nullable=False, default="default.jpg")
+    img_alt = db.Column(db.String(200), nullable=False, default="Image")
     item = db.relationship('Item', backref='section', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.name}'), Image('{self.img_file}')"
+        return f"User('{self.name}'), Image('{self.img_file}', Img-alt('{self.img_alt}')"
 
 
 class Purchase(db.Model):

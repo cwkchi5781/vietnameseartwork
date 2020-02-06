@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% block content %}
  <div class="container">
+     {% set sectLen = sections|length %}
      {%- set numRows = sectLen % 3 -%}
      {% set numRows = ((numRows + 1 + sectLen)/4)|round(1, 'floor')|int %}
 
@@ -12,12 +13,12 @@
                         {% set one = sections[sect] %}
                         <div class="col-sm w-25">
                           <div class="card m-3 p-1 text-center" style="max-width:75%; width:auto; height:auto; max-height:90%; font-size:auto; min-height:12rem; min-width:8rem;">
-                              <img src="{{one.ImageInk}}" class="card-img-top " alt="{{one.alt}}">
+                              <img src="{{ one.img_file }}" class="card-img-top " alt="{{ one.img_alt }}">
                               <div class="card-body align-middle">
-                                  <a class="align-middle stretched-link card-title btn btn-outline-dark btn-sm whiteTextOnHover mx-auto" id="{{one.id}}"><h7 >{{one.name}}</h7></a>
+                                  <a class="align-middle stretched-link card-title btn btn-outline-dark btn-sm whiteTextOnHover mx-auto" id="{{one.name}}"><h7 >{{one.name}}</h7></a>
                                   <script>
                                       $("#{{one.id}}").click(() => {
-                                        window.location = '/section/' + "{{one.id}}";
+                                        window.location = '/section/' + "{{one.name}}";
                                       })
                                       //make links underline themselves when hovered over
                                   </script>
