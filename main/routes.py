@@ -1,17 +1,17 @@
 import secrets, os
-from flask_admin.contrib.sqla import ModelView
 from PIL import Image
 from flask import url_for, render_template, flash, redirect, request
 from main import app
-from main import db, bcrypt, admin
-from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection
+from main import db, bcrypt
+from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, AdminVerify
 from main.models import User, Section, Purchase, Item
 from flask_login import login_user, current_user, logout_user, login_required
+from main.adminInfo import userView, admin, sectionView, itemView, myImageView
 
 @app.route('/')
 def home():
-    sections = Section.query.all()
-    return render_template('sectionsDisplay.html', sections=sections)
+    sections = Section.query
+    return render_template('sectionsDisplay.html', sections=sections, sectLen=db.session.query(Section).count())
 
 @app.route('/signUp', methods=['GET', 'POST'])
 def SignUp():
@@ -61,24 +61,33 @@ def logOut():
 
 def save_picture(form_picture, profile):
     random_hex = secrets.token_hex(8)
-    f_name, f_ext = os.path.split(form_picture.filename)
-    picture_fn = random_hex + f_ext
-    while User.query.filter_by(img_file=picture_fn).first():
-        random_hex = secrets.token_hex(8)
-        picture_fn = random_hex + f_ext
     if profile:
+        f_name, f_ext = os.path.split(form_picture.filename)
+        picture_fn = random_hex + f_ext
+        while User.query.filter_by(img_file=picture_fn).first():
+            random_hex = secrets.token_hex(8)
+            picture_fn = random_hex + f_ext
+
         picture_path = os.path.join(app.root_path, 'static/images/profile_pics/', picture_fn)
+        output_size = (140, 140)
+        i = Image.open(form_picture)
+        i.thumbnail(output_size)
+
+        i.save(picture_path)
+        print(picture_path)
+        return picture_fn
     else:
+        random_hex = secrets.token_hex(8)
+        f_name, f_ext = os.path.split(form_picture.filename)
+        picture_fn = random_hex + f_ext
+        while Section.query.filter_by(img_file=picture_fn).first():
+            random_hex = secrets.token_hex(8)
+            picture_fn = random_hex + f_ext
         picture_path = os.path.join(app.root_path, 'static/images/', picture_fn)
-
-    output_size = (140, 140)
-    i = Image.open(form_picture)
-    i.thumbnail(output_size)
-
-    i.save(picture_path)
-    print(picture_path)
-    return picture_fn
-
+        i = Image.open(form_picture)
+        i.save(picture_path)
+        print(picture_path)
+        return picture_fn
 
 
 @app.route('/account', methods=['GET', 'POST'])
@@ -107,25 +116,44 @@ def account():
     img_file = url_for('static', filename='images/profile_pics/' + current_user.img_file)
     return render_template('account.html', title='Profile', img_file=img_file, form=form)
 
+@app.route('/admin/verify', methods=['GET', 'POST'])
+@login_required
+def adminVerify():
+    code = "123456789"
+    form = AdminVerify()
+    print('merp')
+    if form.validate_on_submit():
+        print('hello')
+        if str(form.code.data) == "123456789":
+            current_user.adminStatus = int(1)
+            db.session.commit()
+            print('hi' + str(current_user.adminStatus))
+            return redirect(url_for('home'))
+    return render_template('admin/verify.html', title='Admin Verifation', form=form)
 
-@app.route('/admin')
-def admin():
-    admin.add_view(ModelView(User, db.session))
-    #return render_template('sectionsDisplay.html')
-
-@app.route('/admin/addSection', methods=['GET', 'POST'])
+"""
+@app.route('/admin/section/new/', methods=['GET', 'POST'])
+@login_required
 def addSection():
     form = AddSection()
-    if form.validate_on_submit():
-        if form.img_file.data:
-            imgfile = save_picture(form.img_file.data, False)
-            sect = Section(name=form.name.data, img_alt=form.img_alt.data, img_file=imgfile)
-        else:
-            sect = Section(name=form.name.data, img_alt=form.img_alt.data)
-        db.session.add(sect)
-        db.session.commit()
-        flash(f'Section {form.name.data} created', 'success')
-    return render_template('admin/addSection.html', form=form)
+
+    if current_user.adminStatus > 0:
+        if form.validate_on_submit():
+            if form.img_file.data:
+                imgfile = save_picture(form.img_file.data, False)
+                sect = Section(name=form.name.data, img_alt=form.img_alt.data, img_file=imgfile)
+            else:
+                sect = Section(name=form.name.data, img_alt=form.img_alt.data)
+            db.session.add(sect)
+            db.session.commit()
+            flash(f'Section {form.name.data} created', 'success')
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        return render_template('admin/addSection.html', form=form)
+    else:
+        flash("You were redirected back to the home page", 'warning')
+        return render_template('admin/addSection.html', form=form)
+"""
 
 app.route('/purchases/new')
 def checkOut():
@@ -141,6 +169,14 @@ def item(sectionName, item):
     return render_template('itemOutline.html', section=sectionName, item=item)
 
 
+
+#admin stuff afterward
+
+admin.add_view(userView(User, db.session))
+admin.add_view(sectionView(Section, db.session))
+admin.add_view(itemView(Item, db.session))
+path = os.path.join(os.path.dirname(__file__), 'static/images')
+admin.add_view(myImageView(path, '/static/images/', name='Image Files'))
 
 
 

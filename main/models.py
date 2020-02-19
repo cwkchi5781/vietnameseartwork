@@ -1,7 +1,6 @@
-from main import db, login_manager, admin
+from main import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
-from flask_admin import Admin
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -13,21 +12,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     img_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
+    adminStatus = db.Column(db.Integer, nullable=False, unique=False, default=0)
     purchase = db.relationship('Purchase', backref='user', lazy=True)
 
     def __repr__(self):
-        return f"Username('{self.username}'), Email('{self.email}'), Image('{self.img_file}')"
+        return f"Username('{self.username}'), Email('{self.email}'), Image('{self.img_file}', Admin status {self.adminStatus})"
 
-
-#class Admin(db.Model, Admin):
-#    id = db.Column(db.Integer, primary_key=True)
-#    username = db.Column(db.String(20), unique=True, nullable=False)
-#    #email = db.Column(db.String(120), unique=True, nullable=False)
-#    #img_file = db.Column(db.String(20), nullable=False, default="default.jpg")
-#    #password = db.Column(db.String(60), nullable=False)
-
-#    def __repr__(self):
-#        return f"Username('{self.username}'), Email('{self.email}'), Image('{self.img_file}')"
 
 
 class Section(db.Model):
@@ -39,6 +29,7 @@ class Section(db.Model):
 
     def __repr__(self):
         return f"User('{self.name}'), Image('{self.img_file}', Img-alt('{self.img_alt}')"
+
 
 
 class Purchase(db.Model):
