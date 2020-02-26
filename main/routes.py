@@ -3,7 +3,7 @@ from PIL import Image
 from flask import url_for, render_template, flash, redirect, request
 from main import app
 from main import db, bcrypt
-from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, AdminVerify
+from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, AdminVerify, review
 from main.models import User, Section, Purchase, Item
 from flask_login import login_user, current_user, logout_user, login_required
 from main.adminInfo import userView, admin, sectionView, itemView, myImageView
@@ -53,11 +53,14 @@ def Login():
     return render_template('logIn.html', form=form, title='Log In')
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logOut():
     logout_user()
-    flash('You have been logged out', 'success')
-    return redirect(url_for('home'))
+    form = review()
+    return render_template('review.html', form=form, title='Reviews')
+
+@app.route('/reviews')
+def reviewPage():
 
 def save_picture(form_picture, profile):
     random_hex = secrets.token_hex(8)

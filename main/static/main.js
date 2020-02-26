@@ -1,7 +1,4 @@
 $(document).ready(function() {              // attach a handler to an event for the elements
-
-
-
     $(".whiteTextOnHover").mouseover(function(){
       $(this).css("color", "white");
     });
