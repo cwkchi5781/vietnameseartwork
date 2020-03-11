@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/PycharmProjects/BlogwithFlaskTutorial/.idea/BlogwithFlaskTutorial.iml" filepath="$USER_HOME$/PycharmProjects/BlogwithFlaskTutorial/.idea/BlogwithFlaskTutorial.iml" />
-      <module fileurl="file://$USER_HOME$/Flask_Blog/.idea/Flask_Blog.iml" filepath="$USER_HOME$/Flask_Blog/.idea/Flask_Blog.iml" />
-      <module fileurl="file://$USER_HOME$/PycharmProjects/tempalesWebsite/.idea/tempalesWebsite.iml" filepath="$USER_HOME$/PycharmProjects/tempalesWebsite/.idea/tempalesWebsite.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/vietnameseartwork.iml" filepath="$PROJECT_DIR$/.idea/vietnameseartwork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BTSTRIVIA.iml" filepath="$PROJECT_DIR$/.idea/BTSTRIVIA.iml" />
     </modules>
   </component>
 </project>
