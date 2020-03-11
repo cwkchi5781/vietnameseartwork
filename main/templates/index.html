@@ -6,11 +6,7 @@
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-        {% if title %}
-        <title>Vietnamese Art Gallery - Folk Art, Books, Ao-Dai Traditional Outfits and more - {{ title }}</title>
-    {% else %}
-        <title>Vietnamese Art Gallery - Folk Art, Books, Ao-Dai Traditional Outfits and more</title>
-    {% endif %}
+        <title>BTS TRIVIA </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -24,77 +20,9 @@
 
 </head>
 <body>
-
-    <div id="top">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand pr-1 " style="width:30%;" href="/"><img class="d-inline-block align-top img-fluid w-100" href="/" src="http://smoothtrader.com/asia2you/Images/BigVietnameseArtworkLogo.jpg" alt="Vietnamese Art Gallery - Folk Art, Books, Ao-Dai Traditional Outfits and more" ></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto" style="font-size:1.2em;">
-              <li class="nav-item active ">
-                <a class="nav-link" href="/">Home </a> <span class="sr-only">(current)</span>
-              </li>
-                <li class="nav-item form-inline ">
-                     <a class="nav-link" href="#">About Us</a>
-                </li>
-                <li class="nav-item ">
-                     <a class="nav-link" href="#">Contact Us</a>
-                </li>
-                <li class="nav-item ">
-                     <a class="nav-link" href="#">Store Polices</a>
-                </li>
-                <li class="nav-item dropdown ">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      My Account
-                    </a>
-                    {% if current_user.is_authenticated %}
-
-                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                         <a class="dropdown-item" href="/account">My Profile</a>
-                         <a class="dropdown-item" href="#">Shopping Cart</a>
-                         <a class="dropdown-item" href="#">My Orders</a>
-                         <div class="dropdown-divider"></div>
-                         <a class="dropdown-item" href="/logout">Log Out</a>
-                    </div>
-                    {% else %}
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/login">Login</a>
-                        <a class="dropdown-item" href="/signUp">Sign Up</a>
-                        <a class="dropdown-item" href="#">Shopping Cart</a>
-                    </div>
-                    {% endif %}
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0 ml-3">
-              <input class="form-control " type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-          </div>
-        </nav>
-    </div>
-
     <div id="middle">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                 {{message}}
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-              {% endfor %}
-            {% endif %}
-        {% endwith %}
-            {% block content %}
-            {% endblock  %}
-    </div>
-
-    <div id="bottom">
-        <a class="nav-link text-muted" href="/admin">Admin Login</a>
+        {% block content %}
+        {% endblock  %}
     </div>
 
 
