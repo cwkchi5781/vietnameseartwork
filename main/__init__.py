@@ -1,21 +1,18 @@
-import flask, os
+import flask, os, mysql.connector
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_bcrypt import Bcrypt
 app = flask.Flask(__name__)
 
 SECRET_KEY = os.urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
+app.secret_key = SECRET_KEY
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///site.db"
+db = mysql.connector.connect(
+    host="104.168.136.69",
+    user="yscbtlcv_cwkchi5781",
+    password="singlebird5781!",
+    database="BTSTRIVIA"
+)
 
-db = SQLAlchemy(app)
-
-bcrypt = Bcrypt(app)
-
-login_manager = LoginManager(app)
-login_manager.login_view = 'Login'
-login_manager.login_message_category = 'info'
+cursor = db.cursor()
 
 from main import routes
 
