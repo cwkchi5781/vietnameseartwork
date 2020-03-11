@@ -160,7 +160,7 @@ def checkOut():
     return render_template('purchase.html')
 
 
-@app.route('/section/<sectionName>')
+@app.route('/section/<sectionName>/catlog')
 def sectionPage(sectionName):
     return render_template('sectionsOutline.html', section=sectionName)
 

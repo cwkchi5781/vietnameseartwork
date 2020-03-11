@@ -14,10 +14,16 @@
                               {% set img_file = url_for('static', filename='images/' + one.img_file) %}
                               <img src="{{img_file}}" class="card-img-top sd" alt="{{ one.img_alt }}">
                               <div class="card-body align-middle">
-                                  <a class="align-middle stretched-link card-title btn btn-outline-dark btn-sm whiteTextOnHover mx-auto" id="{{one.name}}"><h7 >{{one.name}}</h7></a>
+                                  <a class="align-middle stretched-link card-title btn btn-outline-dark btn-sm whiteTextOnHover mx-auto" id="{{one.name}}" ><h7>{{one.name}}</h7></a>
                                   <script>
-                                      $("#{{one.id}}").click(() => {
-                                        window.location = '/section/' + "{{one.id}}";
+                                       console.log('hello ' + "{{one.name}}");
+                                       //console.log($("#{{one.id}}"))
+                                      $("#{{one.id}}").click(function (){
+                                        console.log('hi');
+                                        var urlLink = "/section/" + "{{one.id}}" + "/catlog";
+                                        urlLink = urlLink.replace(/\s/g, '');
+                                        console.log(urlLink);
+                                        Window.location = urlLink;
                                       })
                                       //make links underline themselves when hovered over
                                   </script>
