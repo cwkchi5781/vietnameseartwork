@@ -3,13 +3,10 @@ from flask_admin.contrib.sqla import ModelView
 from PIL import Image
 from flask import url_for, render_template, flash, redirect, request
 from main import app
-<<<<<<< HEAD
-from main import db, bcrypt
-from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, AdminVerify, review
-=======
+from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, review
+from main import db, bcrypt, admin
 from main import db, bcrypt, admin
 from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection
->>>>>>> parent of 7a83369... Didn't change too much stuff. The links to the sections weren't working and that was becasue the names of the sections had spaces in them so i decided to use the item id instead
 from main.models import User, Section, Purchase, Item
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -66,6 +63,7 @@ def logOut():
 
 @app.route('/reviews')
 def reviewPage():
+    pass
 
 def save_picture(form_picture, profile):
     random_hex = secrets.token_hex(8)

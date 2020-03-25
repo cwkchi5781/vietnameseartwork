@@ -1,18 +1,19 @@
 {% extends 'index.html' %}
 {% block content %}
  <div class="container">
+     {% set sectLen = sections|length %}
      {%- set numRows = sectLen % 3 -%}
      {% set numRows = ((numRows + 1 + sectLen)/4)|round(1, 'floor')|int %}
+
     {% for row in range(0, numRows*4, 4) %}
      {%set maxHeight = 100/numRows%}
     <div class="row" style="min-height:5rem;"><!-- max-height:{{maxHeight}};"-->
                 {% for sect in range(row, row+4, 1 ) %}
-                    {% if sect <= (sectLen-1) %}
-                        {% set one = sections.filter_by(id=(sect+1)).first() %}
+                    {% if sect <= (sectLen -1 ) %}
+                        {% set one = sections[sect] %}
                         <div class="col-sm w-25">
                           <div class="card m-3 p-1 text-center" style="max-width:75%; width:auto; height:auto; max-height:90%; font-size:auto; min-height:12rem; min-width:8rem;">
-                              {% set img_file = url_for('static', filename='images/' + one.img_file) %}
-                              <img src="{{img_file}}" class="card-img-top sd" alt="{{ one.img_alt }}">
+                              <img src="{{ one.img_file }}" class="card-img-top " alt="{{ one.img_alt }}">
                               <div class="card-body align-middle">
                                   <a class="align-middle stretched-link card-title btn btn-outline-dark btn-sm whiteTextOnHover mx-auto" id="{{one.name}}" ><h7>{{one.name}}</h7></a>
                                   <script>
@@ -24,6 +25,8 @@
                                         urlLink = urlLink.replace(/\s/g, '');
                                         console.log(urlLink);
                                         Window.location = urlLink;
+                                      $("#{{one.id}}").click(() => {
+                                        window.location = '/section/' + "{{one.name}}";
                                       })
                                       //make links underline themselves when hovered over
                                   </script>
