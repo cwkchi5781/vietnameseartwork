@@ -54,9 +54,6 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
 
-class AdminVerify(FlaskForm):
-    code = StringField('Admin Code', validators=[DataRequired(), Length(max=40)])
-    submit = SubmitField('Submit Code')
 
 class AddSection(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=20)])
