@@ -3,8 +3,6 @@ from flask_admin.contrib.sqla import ModelView
 from PIL import Image
 from flask import url_for, render_template, flash, redirect, request
 from main import app
-from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection, review
-from main import db, bcrypt, admin
 from main import db, bcrypt, admin
 from main.forms import SignUpForm, LoginForm, UpdateAccount, AddSection
 from main.models import User, Section, Purchase, Item
@@ -55,15 +53,11 @@ def Login():
     return render_template('logIn.html', form=form, title='Log In')
 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/logout')
 def logOut():
     logout_user()
-    form = review()
-    return render_template('review.html', form=form, title='Reviews')
-
-@app.route('/reviews')
-def reviewPage():
-    pass
+    flash('You have been logged out', 'success')
+    return redirect(url_for('home'))
 
 def save_picture(form_picture, profile):
     random_hex = secrets.token_hex(8)
@@ -138,7 +132,7 @@ def checkOut():
     return render_template('purchase.html')
 
 
-@app.route('/section/<sectionName>/catlog')
+@app.route('/section/<sectionName>')
 def sectionPage(sectionName):
     return render_template('sectionsOutline.html', section=sectionName)
 
